@@ -1,67 +1,55 @@
 ﻿using GalaSoft.MvvmLight;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Threading;
-using WoWAuctionHouse.Extensions;
 using WoWAuctionHouse.Services.BlizzApiService;
 
 namespace WoWAuctionHouse.Services.AuctionService
 {
     public class AuctionService : IAuctionService
     {
-        private IBlizzApiService _blizzApiService;
+        private readonly IBlizzApiService _blizzApiService;
 
         public AuctionService(IBlizzApiService blizzApiService)
         {
             _blizzApiService = blizzApiService;
-            auctions = new ObservableCollection<AuctionItemModel>();
+            Auctions = new ObservableCollection<AuctionItemModel>();
         }
 
-        public ObservableCollection<AuctionItemModel> auctions { get; set; }
-
-        private DispatcherTimer Timer;
+        public ObservableCollection<AuctionItemModel> Auctions { get; set; }
 
 
-        public async Task GetAuctionsByItemId(int itemId)
+        public AuctionItemModel GetAuctionsByItemId(int itemId)
         {
-            var itemAuctions = auctions.Where(x => x.ItemId == itemId).ToList();
+            var itemAuctions = Auctions.Where(x => x.ItemId == itemId).ToList();
 
-            foreach (var i in itemAuctions)
+            var bestPriceItem = itemAuctions.First();
+
+            foreach (var item in itemAuctions)
             {
-                 if (i.BuyOutPrice != null)
+                if (item.BuyOutPrice != null)
                 {
-                    var toLong = (long)i.BuyOutPrice;
-                    var g = toLong.ToGold();
+                    if (item.BuyOutPrice < bestPriceItem.BuyOutPrice)
+                        bestPriceItem = item;
                 }
-
-                if (i.UnitPrice > 0)
+                else
                 {
-                    var g = i.UnitPrice.ToGold();
+                    if (item.UnitPrice > 0)
+                        if (item.UnitPrice < bestPriceItem.UnitPrice)
+                            bestPriceItem = item;
                 }
             }
+
+            return bestPriceItem;
         }
         public async Task GetAuctions()
         {
-            AuctionTick(null, null);
-            Timer = new DispatcherTimer
-            {
-                Interval = TimeSpan.FromMinutes(1)
-            };
-            Timer.Tick += AuctionTick;
-            Timer.Start();
-        }
-
-        private async void AuctionTick(object sender, EventArgs e)
-        {
-            auctions = new ObservableCollection<AuctionItemModel>();
+            Auctions = new ObservableCollection<AuctionItemModel>();
             var auc = await _blizzApiService.GetAuctions();
 
             foreach (var a in auc.auctions)
             {
-                auctions.Add(new AuctionItemModel
+                Auctions.Add(new AuctionItemModel
                 {
                     BuyOutPrice = a.buyout,
                     ItemId = a.item.id,

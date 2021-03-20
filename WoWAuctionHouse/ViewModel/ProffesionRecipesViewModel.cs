@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
+using WoWAuctionHouse.Extensions;
 using WoWAuctionHouse.Infrastructure;
 using WoWAuctionHouse.Models;
 using WoWAuctionHouse.Models.BlizzApiModels.GetItemMediaModels;
@@ -52,20 +53,23 @@ namespace WoWAuctionHouse.ViewModel
             var recipe = _allRecipes.Find(x => x.id == SelectedRecipe.Id);
             ReagentsCollection.Clear();
             ItemCollection.Clear();
+            AuctionItemModel auctionItem;
             foreach (var r in recipe.reagents)
             {
                 var image = await _blizzApiService.GetItemMedia(r.reagent.id);
-                while (image.assets == null)
+                while (image?.assets == null)
                     image = await _blizzApiService.GetItemMedia(r.reagent.id);
+
+                auctionItem = _auctionService.GetAuctionsByItemId(r.reagent.id);
 
                 ReagentsCollection.Add(new ItemModel
                 {
                     Id = r.reagent.id,
                     Name = r.reagent.name,
                     Quantity = r.quantity,
-                    ItemImage = image.assets.FirstOrDefault()?.value
+                    ItemImage = image.assets.FirstOrDefault()?.value,
+                    Gold = auctionItem.BuyOutPrice?.ToGold() ?? auctionItem.UnitPrice.ToGold()
                 });
-                await _auctionService.GetAuctionsByItemId(r.reagent.id);
             }
 
             var craftedItemId = recipe.crafted_item?.id ?? recipe.horde_crafted_item.id;
@@ -75,12 +79,15 @@ namespace WoWAuctionHouse.ViewModel
             while (itemImage?.assets == null)
                 itemImage = await _blizzApiService.GetItemMedia(craftedItemId);
 
+            auctionItem = _auctionService.GetAuctionsByItemId(craftedItemId);
+
             ItemCollection.Add(new ItemModel
             {
                 Id = craftedItemId,
                 ItemImage = itemImage.assets.FirstOrDefault()?.value,
                 Name = craftedItemName,
-                Quantity = 1
+                Quantity = 1,
+                Gold = auctionItem.BuyOutPrice?.ToGold() ?? auctionItem.UnitPrice.ToGold()
             });
         }
 
@@ -155,8 +162,8 @@ namespace WoWAuctionHouse.ViewModel
         {
             OnLoadCommand = new RelayCommand(async () =>
             {
-                _auctionService.auctions.CollectionChanged += Auctions_CollectionChanged;
-                AuctionCount = _auctionService.auctions.Count;
+                _auctionService.Auctions.CollectionChanged += Auctions_CollectionChanged;
+                AuctionCount = _auctionService.Auctions.Count;
                 _proffesionsWithTiers = (ProffesionsWithTiersModel)_navigationService.Parameter;
                 _allRecipes = new List<Models.BlizzApiModels.GetRecipeInformationModels.Root>();
                 var response = await _blizzApiService.GetProffesionRecipes(_proffesionsWithTiers.Proffesion.Id, _proffesionsWithTiers.Tiers.Id);
@@ -185,9 +192,13 @@ namespace WoWAuctionHouse.ViewModel
                         if (inBase)
                         {
                             _allRecipes.Add(recipeInfo);
-                            media = await _blizzApiService.GetItemMedia(recipeInfo.crafted_item?.id ?? recipeInfo.horde_crafted_item.id);
-                            while (media == null)
-                                media = await _blizzApiService.GetItemMedia(recipeInfo.crafted_item?.id ?? recipeInfo.horde_crafted_item.id);
+                            var retryCount = 0;
+                            do
+                            {
+                                media = await _blizzApiService.GetItemMedia(recipeInfo.crafted_item?.id ??
+                                                                            recipeInfo.horde_crafted_item.id);
+                                retryCount++;
+                            } while (media == null || retryCount > 10);
                         }
                         var recipeModel = new RecipeModel
                         {
@@ -211,7 +222,7 @@ namespace WoWAuctionHouse.ViewModel
 
         private void Auctions_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            AuctionCount = _auctionService.auctions.Count;
+            AuctionCount = _auctionService.Auctions.Count;
         }
     }
 }

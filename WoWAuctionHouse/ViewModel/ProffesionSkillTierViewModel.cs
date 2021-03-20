@@ -1,6 +1,5 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -15,10 +14,10 @@ namespace WoWAuctionHouse.ViewModel
 {
     public class ProffesionSkillTierViewModel : ViewModelBase
     {
-        private ProffesionModel proffesion;
+        private ProffesionModel _proffesion;
 
-        private IFrameNavigationService _navigationService;
-        private IBlizzApiService _blizzApiService;
+        private readonly IFrameNavigationService _navigationService;
+        private readonly IBlizzApiService _blizzApiService;
 
         private ObservableCollection<ProffesionTierModel> _proffesionTierCollection;
         private IEnumerable<ProffesionTierModel> SelectedProffesionTier
@@ -30,7 +29,7 @@ namespace WoWAuctionHouse.ViewModel
         }
 
 
-        private IAuctionService _auctionService;
+        private readonly IAuctionService _auctionService;
         public ProffesionSkillTierViewModel(IFrameNavigationService navigationService, IBlizzApiService blizzApiService, IAuctionService auctionService)
         {
             _navigationService = navigationService;
@@ -60,10 +59,7 @@ namespace WoWAuctionHouse.ViewModel
 
         public int AuctionCount
         {
-            get
-            {
-                return _auctionCount;
-            }
+            get => _auctionCount;
 
             set
             {
@@ -75,9 +71,9 @@ namespace WoWAuctionHouse.ViewModel
         {
             OnLoadCommand = new RelayCommand(async () =>
             {
-                _auctionService.auctions.CollectionChanged += Auctions_CollectionChanged;
-                AuctionCount = _auctionService.auctions.Count;
-                proffesion = (ProffesionModel)_navigationService.Parameter;
+                _auctionService.Auctions.CollectionChanged += Auctions_CollectionChanged;
+                AuctionCount = _auctionService.Auctions.Count;
+                _proffesion = (ProffesionModel)_navigationService.Parameter;
 
                 await InitProffesionTier();
             });
@@ -87,7 +83,7 @@ namespace WoWAuctionHouse.ViewModel
 
                 _navigationService.NavigateTo("ProffesionRecipesView", new ProffesionsWithTiersModel
                 {
-                    Proffesion = proffesion,
+                    Proffesion = _proffesion,
                     Tiers = tier
                 });
             });
@@ -96,7 +92,7 @@ namespace WoWAuctionHouse.ViewModel
 
         private async Task InitProffesionTier()
         {
-            var tiers = await _blizzApiService.GetProffesionSkillTires(proffesion.Id);
+            var tiers = await _blizzApiService.GetProffesionSkillTires(_proffesion.Id);
             ProffesionTierCollection = new ObservableCollection<ProffesionTierModel>();
             foreach (var item in tiers.skill_tiers)
             {
@@ -110,7 +106,7 @@ namespace WoWAuctionHouse.ViewModel
         }
         private void Auctions_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            AuctionCount = _auctionService.auctions.Count;
+            AuctionCount = _auctionService.Auctions.Count;
         }
 
     }

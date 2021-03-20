@@ -79,7 +79,7 @@ namespace WoWAuctionHouse.ViewModel
                 await InitProffesions();
                 _auctionTimer_Elapsed(null,null);
                 _auctionTimer.Start();
-                _auctionService.auctions.CollectionChanged += Auctions_CollectionChanged;
+                _auctionService.Auctions.CollectionChanged += Auctions_CollectionChanged;
             });
             SelectProffesionCommand = new RelayCommand(() =>
             {
@@ -97,7 +97,7 @@ namespace WoWAuctionHouse.ViewModel
 
         private void Auctions_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            AuctionCount = _auctionService.auctions.Count;
+            AuctionCount = _auctionService.Auctions.Count;
         }
 
         private async Task InitProffesions()

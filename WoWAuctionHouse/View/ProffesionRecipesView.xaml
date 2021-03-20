@@ -67,17 +67,28 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0">
-                    <ListView ItemsSource="{Binding ReagentsCollection}" 
-                              SelectionMode="Single">
+                    <ListView 
+                        Name="ReagentsList"
+                        ItemsSource="{Binding ReagentsCollection}" 
+                        SelectionMode="Single"
+                        ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                         <ListView.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <StackPanel Orientation="Horizontal" Width="395" />
+                                <WrapPanel Orientation="Horizontal" Width="{Binding ActualWidth, ElementName=ReagentsList}"/>
                             </ItemsPanelTemplate>
                         </ListView.ItemsPanel>
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Vertical" Width="100">
                                     <TextBlock Text="{Binding Name}" VerticalAlignment="Center" TextWrapping="WrapWithOverflow"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding Gold.Gold}"/>
+                                        <Image Source="https://static.wikia.nocookie.net/wowwiki/images/1/10/Gold.png/revision/latest/scale-to-width-down/14?cb=20070321014526"/>
+                                        <TextBlock Text="{Binding Gold.Silver}"/>
+                                        <Image Source="https://static.wikia.nocookie.net/wowwiki/images/0/0b/Silver.png/revision/latest/scale-to-width-down/14?cb=20070321014552"/>
+                                        <TextBlock Text="{Binding Gold.Bronze}"/>
+                                        <Image Source="https://static.wikia.nocookie.net/wowwiki/images/1/12/Copper.png/revision/latest/scale-to-width-down/14?cb=20070321014610"/>
+                                    </StackPanel>
                                     <TextBlock Text="{Binding Quantity}" VerticalAlignment="Center" TextWrapping="WrapWithOverflow"/>
                                     <Image Source="{Binding ItemImage}" Width="48" Height="48" Stretch="Fill"/>
                                 </StackPanel>
@@ -97,6 +108,14 @@
                             <DataTemplate>
                                 <StackPanel Orientation="Vertical" Width="100">
                                     <TextBlock Text="{Binding Name}" VerticalAlignment="Center" TextWrapping="WrapWithOverflow"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding Gold.Gold}"/>
+                                        <Image Source="https://static.wikia.nocookie.net/wowwiki/images/1/10/Gold.png/revision/latest/scale-to-width-down/14?cb=20070321014526"/>
+                                        <TextBlock Text="{Binding Gold.Silver}"/>
+                                        <Image Source="https://static.wikia.nocookie.net/wowwiki/images/0/0b/Silver.png/revision/latest/scale-to-width-down/14?cb=20070321014552"/>
+                                        <TextBlock Text="{Binding Gold.Bronze}"/>
+                                        <Image Source="https://static.wikia.nocookie.net/wowwiki/images/1/12/Copper.png/revision/latest/scale-to-width-down/14?cb=20070321014610"/>
+                                    </StackPanel>
                                     <TextBlock Text="{Binding Quantity}" VerticalAlignment="Center" TextWrapping="WrapWithOverflow"/>
                                     <Image Source="{Binding ItemImage}" Width="64" Height="64" Stretch="Fill"/>
                                 </StackPanel>

@@ -6,7 +6,7 @@ namespace WoWAuctionHouse.Services.AuctionService
     public interface IAuctionService
     {
         Task GetAuctions();
-        ObservableCollection<AuctionItemModel> auctions { get; set; }
-        Task GetAuctionsByItemId(int itemId);
+        ObservableCollection<AuctionItemModel> Auctions { get; set; }
+        AuctionItemModel GetAuctionsByItemId(int itemId);
     }
 }
