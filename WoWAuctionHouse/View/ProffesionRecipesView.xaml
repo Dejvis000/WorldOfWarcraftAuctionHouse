@@ -1,0 +1,119 @@
+﻿<Page x:Class="WoWAuctionHouse.View.ProffesionRecipesView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:WoWAuctionHouse.View"
+      DataContext="{Binding ProffesionRecipesViewModel, Source={StaticResource Locator}}"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      xmlns:behaviors="clr-namespace:WoWAuctionHouse.Behaviors"
+      xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+      Title="ProffesionRecipesView">
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding OnLoadCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="70"/>
+        </Grid.RowDefinitions>
+        <Label Grid.Row="0" Content="{Binding AuctionCount}" FontSize="10"/>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <TreeView ItemsSource="{Binding RecipeCategoriesCollection}" >
+                    <i:Interaction.Behaviors>
+                        <behaviors:TreeViewSelectionBehavior ExpandSelected="True"
+                                             HierarchyPredicate="{Binding HierarchyPredicate}"
+                                             SelectedItem="{Binding SelectedRecipe}" />
+                    </i:Interaction.Behaviors>
+                    <TreeView.ItemTemplate>
+                        <HierarchicalDataTemplate>
+                            <TreeViewItem Header="{Binding Name}">
+                                <TreeView ItemsSource="{Binding Recipes}">
+                                    <TreeView.ItemTemplate>
+                                        <HierarchicalDataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Image 
+                                                Source="{Binding ItemMediaURL}" 
+                                                Stretch="Fill" 
+                                                Width="48" 
+                                                Height="48"
+                                                RenderOptions.BitmapScalingMode="Fant"/>
+                                                <TextBlock Text="{Binding Name}"/>
+                                            </StackPanel>
+                                        </HierarchicalDataTemplate>
+                                    </TreeView.ItemTemplate>
+                                </TreeView>
+                            </TreeViewItem>
+                        </HierarchicalDataTemplate>
+                    </TreeView.ItemTemplate>
+                </TreeView>
+            </Grid>
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <ListView ItemsSource="{Binding ReagentsCollection}" 
+                              SelectionMode="Single">
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal" Width="395" />
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Vertical" Width="100">
+                                    <TextBlock Text="{Binding Name}" VerticalAlignment="Center" TextWrapping="WrapWithOverflow"/>
+                                    <TextBlock Text="{Binding Quantity}" VerticalAlignment="Center" TextWrapping="WrapWithOverflow"/>
+                                    <Image Source="{Binding ItemImage}" Width="48" Height="48" Stretch="Fill"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
+                <Grid Grid.Row="1">
+                    <ListView ItemsSource="{Binding ItemCollection}" 
+                              SelectionMode="Single">
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal" Width="395" />
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Vertical" Width="100">
+                                    <TextBlock Text="{Binding Name}" VerticalAlignment="Center" TextWrapping="WrapWithOverflow"/>
+                                    <TextBlock Text="{Binding Quantity}" VerticalAlignment="Center" TextWrapping="WrapWithOverflow"/>
+                                    <Image Source="{Binding ItemImage}" Width="64" Height="64" Stretch="Fill"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button
+                Grid.Column="0"
+                Content="Back"
+                Command="{Binding BackCommand}"/>
+        </Grid>
+    </Grid>
+</Page>
