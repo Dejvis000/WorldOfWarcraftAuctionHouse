@@ -103,6 +103,7 @@ namespace WoWAuctionHouse.ViewModel
                     IsSelected = false
                 });
             }
+            ProffesionTierCollection = new ObservableCollection<ProffesionTierModel>(ProffesionTierCollection.OrderBy(x => x.Name));
         }
         private void Auctions_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {

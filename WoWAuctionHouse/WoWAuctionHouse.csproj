@@ -230,11 +230,15 @@
     <Compile Include="Services\SettingsService\SettingsService.cs" />
     <Compile Include="Services\TokenService\ITokenService.cs" />
     <Compile Include="Services\TokenService\TokenService.cs" />
+    <Compile Include="ViewModel\AuctionsWindowModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="Infrastructure\ViewModelLocator.cs" />
     <Compile Include="ViewModel\ProffesionRecipesViewModel.cs" />
     <Compile Include="ViewModel\ProffesionSkillTierViewModel.cs" />
     <Compile Include="ViewModel\ProffesionViewModel.cs" />
+    <Compile Include="View\AuctionsWindow.xaml.cs">
+      <DependentUpon>AuctionsWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\ProffesionRecipesView.xaml.cs">
       <DependentUpon>ProffesionRecipesView.xaml</DependentUpon>
     </Compile>
@@ -244,6 +248,10 @@
     <Compile Include="View\ProffesionView.xaml.cs">
       <DependentUpon>ProffesionView.xaml</DependentUpon>
     </Compile>
+    <Page Include="View\AuctionsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -11,6 +11,7 @@ using WoWAuctionHouse.Models;
 using WoWAuctionHouse.Models.BlizzApiModels.GetItemMediaModels;
 using WoWAuctionHouse.Services.AuctionService;
 using WoWAuctionHouse.Services.BlizzApiService;
+using WoWAuctionHouse.View;
 using static WoWAuctionHouse.Behaviors.TreeViewSelectionBehavior;
 
 namespace WoWAuctionHouse.ViewModel
@@ -33,6 +34,10 @@ namespace WoWAuctionHouse.ViewModel
         private ObservableCollection<ItemModel> _itemCollection;
 
         private event Action ItemSelected;
+
+        private ItemModel _selectedReagent;
+
+        private AuctionsWindow _auctionWindow;
 
         public ProffesionRecipesViewModel(IFrameNavigationService navigationService, IBlizzApiService blizzApiService, IAuctionService auctionService)
         {
@@ -60,7 +65,7 @@ namespace WoWAuctionHouse.ViewModel
                 while (image?.assets == null)
                     image = await _blizzApiService.GetItemMedia(r.reagent.id);
 
-                auctionItem = _auctionService.GetAuctionsByItemId(r.reagent.id);
+                auctionItem = _auctionService.GetAuctionByItemId(r.reagent.id);
 
                 ReagentsCollection.Add(new ItemModel
                 {
@@ -79,7 +84,7 @@ namespace WoWAuctionHouse.ViewModel
             while (itemImage?.assets == null)
                 itemImage = await _blizzApiService.GetItemMedia(craftedItemId);
 
-            auctionItem = _auctionService.GetAuctionsByItemId(craftedItemId);
+            auctionItem = _auctionService.GetAuctionByItemId(craftedItemId);
 
             ItemCollection.Add(new ItemModel
             {
@@ -143,8 +148,19 @@ namespace WoWAuctionHouse.ViewModel
             }
         }
 
-        private int _auctionCount;
+        public ItemModel SelectedReagent
+        {
+            get => _selectedReagent;
+            set
+            {
+                Set(() => this.SelectedReagent, ref _selectedReagent, value);
 
+                _auctionWindow = new AuctionsWindow(SelectedReagent);
+                _auctionWindow.Show();
+            }
+        }
+
+        private int _auctionCount;
         public int AuctionCount
         {
             get => _auctionCount;

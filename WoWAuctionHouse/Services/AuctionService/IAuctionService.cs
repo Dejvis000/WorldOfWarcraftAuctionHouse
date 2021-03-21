@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
 namespace WoWAuctionHouse.Services.AuctionService
@@ -7,6 +8,7 @@ namespace WoWAuctionHouse.Services.AuctionService
     {
         Task GetAuctions();
         ObservableCollection<AuctionItemModel> Auctions { get; set; }
-        AuctionItemModel GetAuctionsByItemId(int itemId);
+        AuctionItemModel GetAuctionByItemId(int itemId);
+        List<AuctionItemModel> GetAuctionsByItemId(int itemId);
     }
 }

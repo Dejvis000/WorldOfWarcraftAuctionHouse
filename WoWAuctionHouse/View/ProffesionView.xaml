@@ -28,7 +28,6 @@
             Grid.Row="1"
             Margin="5"
             ItemsSource="{Binding ProffesionCollection}"
-            SelectedItem="{Binding SelectedProffesionTier, Mode=TwoWay}"
             SelectionMode="Single" 
             ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
             >

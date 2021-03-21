@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,7 +20,12 @@ namespace WoWAuctionHouse.Services.AuctionService
         public ObservableCollection<AuctionItemModel> Auctions { get; set; }
 
 
-        public AuctionItemModel GetAuctionsByItemId(int itemId)
+        public List<AuctionItemModel> GetAuctionsByItemId(int itemId)
+        {
+            return Auctions.Where(x => x.ItemId == itemId).ToList();
+        }
+
+        public AuctionItemModel GetAuctionByItemId(int itemId)
         {
             var itemAuctions = Auctions.Where(x => x.ItemId == itemId).ToList();
 
@@ -39,7 +45,6 @@ namespace WoWAuctionHouse.Services.AuctionService
                             bestPriceItem = item;
                 }
             }
-
             return bestPriceItem;
         }
         public async Task GetAuctions()

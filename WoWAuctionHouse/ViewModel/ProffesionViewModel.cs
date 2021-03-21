@@ -113,7 +113,7 @@ namespace WoWAuctionHouse.ViewModel
                     Id = item.id,
                     IsSelected = false,
                     Name = item.name,
-                    ImageURL = media.assets.FirstOrDefault()?.value
+                    ImageURL = media?.assets.FirstOrDefault()?.value
                 });
             }
         }

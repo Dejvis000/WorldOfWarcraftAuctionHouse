@@ -1,0 +1,67 @@
+﻿<Window x:Class="WoWAuctionHouse.View.AuctionsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WoWAuctionHouse.View"
+        DataContext="{Binding AuctionsWindowModel, Source={StaticResource Locator}}"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        mc:Ignorable="d"
+        Title="AuctionsWindow" Height="450" Width="800">
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding OnLoadCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+        </Grid>
+        <Grid Grid.Column="1">
+            <!--<ListView
+                x:Name="AuctionsList"
+                Margin="5"
+                ItemsSource="{Binding Auctions}"
+                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                >
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Vertical" Width="{Binding ActualWidth, ElementName=Auctionslist}"/>
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding Quantity}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>-->
+
+            <DataGrid 
+                x:Name="AuctionsList" 
+                AlternatingRowBackground="LightGray" 
+                CanUserAddRows="False" 
+                AutoGenerateColumns="False"
+                ItemsSource="{Binding Auctions}">
+
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}"/>
+                    <DataGridTextColumn Header="Buy OutPrice" Binding="{Binding BuyOutPrice}"/>
+                    <DataGridTextColumn Header="unit price" Binding="{Binding UnitPrice}"/>
+                </DataGrid.Columns>
+                
+            </DataGrid>
+            
+        </Grid>
+    </Grid>
+</Window>

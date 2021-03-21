@@ -36,9 +36,12 @@ namespace WoWAuctionHouse.Infrastructure
             container.RegisterInstance(new SettingsService(blizzApiSettings)).As<ISettingsService>();
 
             container.RegisterInstance(new MainViewModel());
+
+            container.RegisterType<AuctionsWindowModel>();
+
             container.RegisterType<ProffesionViewModel>();
             container.RegisterType<ProffesionSkillTierViewModel>();
-            container.RegisterType<ProffesionRecipesViewModel>();       
+            container.RegisterType<ProffesionRecipesViewModel>();
 
             container.RegisterType<TokenService>().As<ITokenService>();
             container.RegisterType<BlizzApiService>().As<IBlizzApiService>();
@@ -61,6 +64,14 @@ namespace WoWAuctionHouse.Infrastructure
             get
             {
                 return ServiceLocator.Current.GetInstance<MainViewModel>();
+            }
+        }
+
+        public AuctionsWindowModel AuctionsWindowModel
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<AuctionsWindowModel>();
             }
         }
 
@@ -95,6 +106,8 @@ namespace WoWAuctionHouse.Infrastructure
             navigationService.Configure("ProffesionView", new Uri("ProffesionView.xaml", UriKind.Relative));
             navigationService.Configure("ProffesionSkillTierView", new Uri("ProffesionSkillTierView.xaml", UriKind.Relative));
             navigationService.Configure("ProffesionRecipesView", new Uri("ProffesionRecipesView.xaml", UriKind.Relative));
+
+            navigationService.Configure("AuctionsWindow", new Uri("AuctionsWindow.xaml", UriKind.Relative));
 
             container.RegisterInstance<IFrameNavigationService>(navigationService);
         }

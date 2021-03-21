@@ -24,11 +24,12 @@
         </Grid.RowDefinitions>
         <Label Grid.Row="0" Content="{Binding AuctionCount}" FontSize="10"/>
         <ListView
+            Name="ListProffesionTiers"
             Grid.Row="1"
             Margin="5"
             ItemsSource="{Binding ProffesionTierCollection}"
-            SelectedItem="{Binding SelectedProffesion, Mode=TwoWay}"
-            SelectionMode="Single">
+            SelectionMode="Single"
+            ScrollViewer.HorizontalScrollBarVisibility="Disabled" >
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="IsSelected" Value="{Binding IsSelected}" />
@@ -36,12 +37,12 @@
             </ListView.ItemContainerStyle>
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <StackPanel Orientation="Horizontal" Width="700" />
+                    <WrapPanel Orientation="Horizontal" Width="{Binding ActualWidth, ElementName=ListProffesionTiers}"/>
                 </ItemsPanelTemplate>
             </ListView.ItemsPanel>
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Orientation="Vertical" Width="100">
+                    <StackPanel Orientation="Vertical" Width="100" Height="100">
                         <TextBlock Text="{Binding Name}" VerticalAlignment="Center" TextWrapping="WrapWithOverflow"/>
                     </StackPanel>
                 </DataTemplate>
