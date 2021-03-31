@@ -1,0 +1,28 @@
+{
+  "BlizzApiSettings": {
+    "Region": "eu",
+    "Realm": "draenor",
+    "ClientId": "ClientId",
+    "ClientSecret": "ClientSecret",
+    "DynamicNamespace": "dynamic-eu",
+    "StaticNamespace": "static-eu",
+    "Locale": "en_GB"
+  },
+
+  "Serilog": {
+    "MinimumLevel": "Information",
+    "WriteTo": [
+      { "Name": "Console" },
+      {
+        "Name": "File",
+        "Args": {
+          "path": "Logs\\log.txt",
+          "rollingInterval": "Day"
+        }
+      }
+    ],
+    "Properties": {
+      "Application": "WowAuctionHouse"
+    }
+  }
+}
