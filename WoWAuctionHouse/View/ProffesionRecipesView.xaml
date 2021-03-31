@@ -104,6 +104,7 @@
                     </Grid.ColumnDefinitions>
                     <ListView ItemsSource="{Binding ItemCollection}" 
                               SelectionMode="Single"
+                              SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
                               Grid.Column="0">
                         <ListView.ItemsPanel>
                             <ItemsPanelTemplate>

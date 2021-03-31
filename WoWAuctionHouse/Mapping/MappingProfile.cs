@@ -1,5 +1,8 @@
 ﻿using AutoMapper;
+using WoWAuctionHouse.Extensions;
 using WoWAuctionHouse.Models;
+using WoWAuctionHouse.Services.AuctionService;
+using WoWAuctionHouse.ViewModel;
 
 namespace WoWAuctionHouse.Mapping
 {
@@ -8,6 +11,8 @@ namespace WoWAuctionHouse.Mapping
         public MappingProfile()
         {
             CreateMap<Models.BlizzApiModels.GetProffesionRecipesModels.Root, ProffesionRecipesModel>().ReverseMap();
+
+            CreateMap<AuctionItemWithGoldModel, AuctionItemModel>().ReverseMap();
         }
     }
 }

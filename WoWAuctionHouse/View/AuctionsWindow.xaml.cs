@@ -29,7 +29,7 @@ namespace WoWAuctionHouse.View
 
             AuctionsWindowModel = this.DataContext as AuctionsWindowModel;
             AuctionsWindowModel.AuctionsWindow = this;
-            AuctionsWindowModel.ItemId = selectedItem.Id;
+            AuctionsWindowModel.Item = selectedItem;
         }
     }
 }

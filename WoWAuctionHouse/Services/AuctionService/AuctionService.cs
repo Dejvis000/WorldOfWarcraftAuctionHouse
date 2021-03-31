@@ -22,36 +22,68 @@ namespace WoWAuctionHouse.Services.AuctionService
 
         public List<AuctionItemModel> GetAuctionsByItemId(int itemId)
         {
-            return Auctions.Where(x => x.ItemId == itemId).ToList();
+            var firstItem = Auctions.Where(x => x.ItemId == itemId).First();
+            List<List<AuctionItemModel>> groupedAuctions = new List<List<AuctionItemModel>>();
+            if (firstItem.BuyOutPrice != null)
+            {
+                if (firstItem.BuyOutPrice < firstItem.UnitPrice)
+                    groupedAuctions = Auctions.Where(x => x.ItemId == itemId).GroupBy(x => x.UnitPrice).Select(x => x.ToList()).ToList();
+                else
+                    groupedAuctions = Auctions.Where(x => x.ItemId == itemId).GroupBy(x => x.BuyOutPrice).Select(x => x.ToList()).ToList();
+            }
+            else
+                groupedAuctions = Auctions.Where(x => x.ItemId == itemId).GroupBy(x => x.UnitPrice).Select(x => x.ToList()).ToList();
+            List<AuctionItemModel> auctions = new List<AuctionItemModel>();
+            foreach (var items in groupedAuctions)
+            {
+                var quantity = 0;
+                foreach (var item in items)
+                    quantity = item.Quantity;
+                auctions.Add(new AuctionItemModel
+                {
+                    BuyOutPrice = items.First().BuyOutPrice,
+                    Quantity = quantity,
+                    ItemId = items.First().ItemId,
+                    UnitPrice = items.First().UnitPrice
+                });
+            }
+            return auctions;
         }
 
         public AuctionItemModel GetAuctionByItemId(int itemId)
         {
             var itemAuctions = Auctions.Where(x => x.ItemId == itemId).ToList();
-
-            var bestPriceItem = itemAuctions.First();
-
-            foreach (var item in itemAuctions)
+            if (itemAuctions.Any())
             {
-                if (item.BuyOutPrice != null)
+                var bestPriceItem = itemAuctions.First();
+
+                foreach (var item in itemAuctions)
                 {
-                    if (item.BuyOutPrice < bestPriceItem.BuyOutPrice)
-                        bestPriceItem = item;
-                }
-                else
-                {
-                    if (item.UnitPrice > 0)
-                        if (item.UnitPrice < bestPriceItem.UnitPrice)
+                    if (item.BuyOutPrice != null)
+                    {
+                        if (item.BuyOutPrice < bestPriceItem.BuyOutPrice)
                             bestPriceItem = item;
+                    }
+                    else
+                    {
+                        if (item.UnitPrice > 0)
+                            if (item.UnitPrice < bestPriceItem.UnitPrice)
+                                bestPriceItem = item;
+                    }
                 }
+                return bestPriceItem;
             }
-            return bestPriceItem;
+            return new AuctionItemModel();
         }
         public async Task GetAuctions()
         {
             Auctions = new ObservableCollection<AuctionItemModel>();
             var auc = await _blizzApiService.GetAuctions();
-
+            while (auc == null)
+            {
+                await Task.Delay(500);
+                auc = await _blizzApiService.GetAuctions();
+            }
             foreach (var a in auc.auctions)
             {
                 Auctions.Add(new AuctionItemModel

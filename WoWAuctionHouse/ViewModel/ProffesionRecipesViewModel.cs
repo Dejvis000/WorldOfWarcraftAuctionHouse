@@ -36,6 +36,7 @@ namespace WoWAuctionHouse.ViewModel
         private event Action ItemSelected;
 
         private ItemModel _selectedReagent;
+        private ItemModel _selectedItem;
 
         private AuctionsWindow _auctionWindow;
 
@@ -66,15 +67,17 @@ namespace WoWAuctionHouse.ViewModel
                     image = await _blizzApiService.GetItemMedia(r.reagent.id);
 
                 auctionItem = _auctionService.GetAuctionByItemId(r.reagent.id);
-
-                ReagentsCollection.Add(new ItemModel
+                if (auctionItem != null)
                 {
-                    Id = r.reagent.id,
-                    Name = r.reagent.name,
-                    Quantity = r.quantity,
-                    ItemImage = image.assets.FirstOrDefault()?.value,
-                    Gold = auctionItem.BuyOutPrice?.ToGold() ?? auctionItem.UnitPrice.ToGold()
-                });
+                    ReagentsCollection.Add(new ItemModel
+                    {
+                        Id = r.reagent.id,
+                        Name = r.reagent.name,
+                        Quantity = r.quantity,
+                        ItemImage = image.assets.FirstOrDefault()?.value,
+                        Gold = auctionItem.BuyOutPrice?.ToGold() ?? auctionItem.UnitPrice.ToGold()
+                    });
+                }
             }
 
             var craftedItemId = recipe.crafted_item?.id ?? recipe.horde_crafted_item.id;
@@ -154,8 +157,28 @@ namespace WoWAuctionHouse.ViewModel
             set
             {
                 Set(() => this.SelectedReagent, ref _selectedReagent, value);
+                ShowAuctionWidnows(SelectedReagent);
+            }
+        }
 
-                _auctionWindow = new AuctionsWindow(SelectedReagent);
+        public ItemModel SelectedItem
+        {
+            get => _selectedItem;
+            set
+            {
+                Set(() => this.SelectedItem, ref _selectedItem, value);
+                ShowAuctionWidnows(SelectedItem);
+            }
+        }
+
+        private void ShowAuctionWidnows(ItemModel model)
+        {
+            if (model != null)
+            {
+                _auctionWindow = new AuctionsWindow(model)
+                {
+                    Topmost = true
+                };
                 _auctionWindow.Show();
             }
         }
@@ -229,6 +252,8 @@ namespace WoWAuctionHouse.ViewModel
                     i++;
                 }
             });
+
+            BackCommand = new RelayCommand(() => _navigationService.NavigateTo("ProffesionSkillTierView", _proffesionsWithTiers.Proffesion));
         }
 
         private static bool IsItemInBase(Models.BlizzApiModels.GetRecipeInformationModels.Root item)

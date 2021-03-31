@@ -9,22 +9,27 @@
         mc:Ignorable="d"
         Title="AuctionsWindow" Height="450" Width="800">
 
-    <i:Interaction.Triggers>
+    <!--<i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding OnLoadCommand}"/>
         </i:EventTrigger>
-    </i:Interaction.Triggers>
+    </i:Interaction.Triggers>-->
 
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <Grid Grid.Column="0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
+        <Grid Grid.Column="0"
+              Name="ItemInformation">
+            <StackPanel
+                Orientation="Vertical"
+                Width="{Binding ActualWidth, ElementName=ItemInformation}">
+                <Image 
+                    Source="{Binding Item.ItemImage}"
+                    Width="96"/>
+                <TextBlock Text="{Binding Item.Name}"/>
+            </StackPanel>
         </Grid>
         <Grid Grid.Column="1">
             <!--<ListView
@@ -55,9 +60,37 @@
                 ItemsSource="{Binding Auctions}">
 
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}"/>
-                    <DataGridTextColumn Header="Buy OutPrice" Binding="{Binding BuyOutPrice}"/>
-                    <DataGridTextColumn Header="unit price" Binding="{Binding UnitPrice}"/>
+                    <DataGridTextColumn Header="Quantity" Width="*" Binding="{Binding Quantity}"/>
+                    <!--<DataGridTextColumn Header="Buy OutPrice" Width="*" Binding="{Binding BuyOutPrice}"/>-->
+                    <DataGridTemplateColumn Width="*" Header="Buy OutPrice" SortMemberPath="BuyOutPrice">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding BuyOutPriceGold.Gold}"/>
+                                    <Image Source="https://static.wikia.nocookie.net/wowwiki/images/1/10/Gold.png/revision/latest/scale-to-width-down/14?cb=20070321014526"/>
+                                    <TextBlock Text="{Binding BuyOutPriceGold.Silver}"/>
+                                    <Image Source="https://static.wikia.nocookie.net/wowwiki/images/0/0b/Silver.png/revision/latest/scale-to-width-down/14?cb=20070321014552"/>
+                                    <TextBlock Text="{Binding BuyOutPriceGold.Bronze}"/>
+                                    <Image Source="https://static.wikia.nocookie.net/wowwiki/images/1/12/Copper.png/revision/latest/scale-to-width-down/14?cb=20070321014610"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Width="*" Header="unit price" SortMemberPath="UnitPrice">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding UnitPriceGold.Gold}"/>
+                                    <Image Source="https://static.wikia.nocookie.net/wowwiki/images/1/10/Gold.png/revision/latest/scale-to-width-down/14?cb=20070321014526"/>
+                                    <TextBlock Text="{Binding UnitPriceGold.Silver}"/>
+                                    <Image Source="https://static.wikia.nocookie.net/wowwiki/images/0/0b/Silver.png/revision/latest/scale-to-width-down/14?cb=20070321014552"/>
+                                    <TextBlock Text="{Binding UnitPriceGold.Bronze}"/>
+                                    <Image Source="https://static.wikia.nocookie.net/wowwiki/images/1/12/Copper.png/revision/latest/scale-to-width-down/14?cb=20070321014610"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <!--<DataGridTextColumn Width="*" Binding="{Binding UnitPrice}"/>-->
                 </DataGrid.Columns>
                 
             </DataGrid>
