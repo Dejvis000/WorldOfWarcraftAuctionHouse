@@ -10,6 +10,7 @@ using WoWAuctionHouse.Infrastructure;
 using WoWAuctionHouse.Models;
 using WoWAuctionHouse.Services.AuctionService;
 using WoWAuctionHouse.Services.BlizzApiService;
+using WoWAuctionHouse.Services.FilesService;
 using WoWAuctionHouse.Services.TokenService;
 
 namespace WoWAuctionHouse.ViewModel
@@ -20,8 +21,18 @@ namespace WoWAuctionHouse.ViewModel
         private readonly ITokenService _tokenService;
         private readonly IBlizzApiService _blizzApiService;
         private readonly IAuctionService _auctionService;
-
-
+        private readonly IFilesService _filesService;
+        
+        public ProffesionViewModel(IFrameNavigationService navigationService, ITokenService tokenService, 
+            IBlizzApiService blizzApiService, IAuctionService auctionService, IFilesService filesService)
+        {
+            _navigationService = navigationService;
+            _tokenService = tokenService;
+            _blizzApiService = blizzApiService;
+            _auctionService = auctionService;
+            _filesService = filesService;
+            ConfigureCommands();
+        }
         private ObservableCollection<ProffesionModel> _proffesionCollection;
         private IEnumerable<ProffesionModel> SelectedProffesion
         {
@@ -29,15 +40,6 @@ namespace WoWAuctionHouse.ViewModel
             {
                 return ProffesionCollection.Where(x => x.IsSelected);
             }
-        }
-        
-        public ProffesionViewModel(IFrameNavigationService navigationService, ITokenService tokenService, IBlizzApiService blizzApiService, IAuctionService auctionService)
-        {
-            _navigationService = navigationService;
-            _tokenService = tokenService;
-            _blizzApiService = blizzApiService;
-            _auctionService = auctionService;
-            ConfigureCommands();
         }
 
         public ICommand OnLoadCommand { get; set; }
@@ -107,13 +109,13 @@ namespace WoWAuctionHouse.ViewModel
 
             foreach (var item in proffesions.professions)
             {
-                var media = await _blizzApiService.GetProffesionMedia(item.id);
+                var media = await _filesService.GetProffesionImage(item.id); //await _blizzApiService.GetProffesionMedia(item.id);
                 ProffesionCollection.Add(new ProffesionModel
                 {
                     Id = item.id,
                     IsSelected = false,
                     Name = item.name,
-                    ImageURL = media?.assets.FirstOrDefault()?.value
+                    ImageURL = media//?.assets.FirstOrDefault()?.value
                 });
             }
         }

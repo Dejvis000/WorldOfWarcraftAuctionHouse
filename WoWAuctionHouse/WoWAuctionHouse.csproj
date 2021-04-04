@@ -226,6 +226,8 @@
     <Compile Include="Services\AuctionService\IAuctionService.cs" />
     <Compile Include="Services\BlizzApiService\BlizzApiService.cs" />
     <Compile Include="Services\BlizzApiService\IBlizzApiService.cs" />
+    <Compile Include="Services\FilesService\FilesService.cs" />
+    <Compile Include="Services\FilesService\IFilesService.cs" />
     <Compile Include="Services\SettingsService\ISettingsService.cs" />
     <Compile Include="Services\SettingsService\SettingsService.cs" />
     <Compile Include="Services\TokenService\ITokenService.cs" />
@@ -295,7 +297,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="appsettings.json" />
+    <None Include="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

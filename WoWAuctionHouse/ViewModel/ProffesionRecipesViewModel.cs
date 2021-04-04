@@ -11,6 +11,7 @@ using WoWAuctionHouse.Models;
 using WoWAuctionHouse.Models.BlizzApiModels.GetItemMediaModels;
 using WoWAuctionHouse.Services.AuctionService;
 using WoWAuctionHouse.Services.BlizzApiService;
+using WoWAuctionHouse.Services.FilesService;
 using WoWAuctionHouse.View;
 using static WoWAuctionHouse.Behaviors.TreeViewSelectionBehavior;
 
@@ -21,6 +22,22 @@ namespace WoWAuctionHouse.ViewModel
         private readonly IFrameNavigationService _navigationService;
         private readonly IBlizzApiService _blizzApiService;
         private readonly IAuctionService _auctionService;
+        private readonly IFilesService _filesService;
+
+        public ProffesionRecipesViewModel(IFrameNavigationService navigationService, IBlizzApiService blizzApiService, 
+            IAuctionService auctionService, IFilesService filesService)
+        {
+            _navigationService = navigationService;
+            _blizzApiService = blizzApiService;
+            _auctionService = auctionService;
+            _filesService = filesService;
+            ConfigureCommands();
+
+            ItemSelected += ProffesionRecipesViewModel_ItemSelected;
+
+            ReagentsCollection = new ObservableCollection<ItemModel>();
+            ItemCollection = new ObservableCollection<ItemModel>();
+        }
 
         private ProffesionsWithTiersModel _proffesionsWithTiers;
         private ProffesionRecipesModel _proffesionRecipes;
@@ -40,20 +57,6 @@ namespace WoWAuctionHouse.ViewModel
 
         private AuctionsWindow _auctionWindow;
 
-        public ProffesionRecipesViewModel(IFrameNavigationService navigationService, IBlizzApiService blizzApiService, IAuctionService auctionService)
-        {
-            _navigationService = navigationService;
-            _blizzApiService = blizzApiService;
-            _auctionService = auctionService;
-            ConfigureCommands();
-
-            ItemSelected += ProffesionRecipesViewModel_ItemSelected;
-
-            ReagentsCollection = new ObservableCollection<ItemModel>();
-            ItemCollection = new ObservableCollection<ItemModel>();
-        }
-
-
         private async void ProffesionRecipesViewModel_ItemSelected()
         {
             var recipe = _allRecipes.Find(x => x.id == SelectedRecipe.Id);
@@ -62,9 +65,9 @@ namespace WoWAuctionHouse.ViewModel
             AuctionItemModel auctionItem;
             foreach (var r in recipe.reagents)
             {
-                var image = await _blizzApiService.GetItemMedia(r.reagent.id);
-                while (image?.assets == null)
-                    image = await _blizzApiService.GetItemMedia(r.reagent.id);
+                var image = await _filesService.GetItemImage(r.reagent.id); //await _blizzApiService.GetItemMedia(r.reagent.id);
+                //while (image?.assets == null)
+                //   image = await _blizzApiService.GetItemMedia(r.reagent.id);
 
                 auctionItem = _auctionService.GetAuctionByItemId(r.reagent.id);
                 if (auctionItem != null)
@@ -74,7 +77,7 @@ namespace WoWAuctionHouse.ViewModel
                         Id = r.reagent.id,
                         Name = r.reagent.name,
                         Quantity = r.quantity,
-                        ItemImage = image.assets.FirstOrDefault()?.value,
+                        ItemImage = image,
                         Gold = auctionItem.BuyOutPrice?.ToGold() ?? auctionItem.UnitPrice.ToGold()
                     });
                 }
@@ -83,16 +86,16 @@ namespace WoWAuctionHouse.ViewModel
             var craftedItemId = recipe.crafted_item?.id ?? recipe.horde_crafted_item.id;
             var craftedItemName = recipe.crafted_item != null ? recipe.crafted_item.name : recipe.horde_crafted_item.name;
 
-            var itemImage = await _blizzApiService.GetItemMedia(craftedItemId);
-            while (itemImage?.assets == null)
-                itemImage = await _blizzApiService.GetItemMedia(craftedItemId);
+            var itemImage = await _filesService.GetItemImage(craftedItemId); //await _blizzApiService.GetItemMedia(craftedItemId);
+            //while (itemImage?.assets == null)
+            //    itemImage = await _blizzApiService.GetItemMedia(craftedItemId);
 
             auctionItem = _auctionService.GetAuctionByItemId(craftedItemId);
 
             ItemCollection.Add(new ItemModel
             {
                 Id = craftedItemId,
-                ItemImage = itemImage.assets.FirstOrDefault()?.value,
+                ItemImage = itemImage,
                 Name = craftedItemName,
                 Quantity = 1,
                 Gold = auctionItem.BuyOutPrice?.ToGold() ?? auctionItem.UnitPrice.ToGold()
@@ -227,15 +230,16 @@ namespace WoWAuctionHouse.ViewModel
                             recipeInfo = await _blizzApiService.GetRecipeInformation(res.id);
                         var inBase = IsItemInBase(recipeInfo);
 
-                        var media = new Root();
+                        string media = "";
                         if (inBase)
                         {
                             _allRecipes.Add(recipeInfo);
                             var retryCount = 0;
                             do
                             {
-                                media = await _blizzApiService.GetItemMedia(recipeInfo.crafted_item?.id ??
-                                                                            recipeInfo.horde_crafted_item.id);
+                                media = await _filesService.GetItemImage(recipeInfo.crafted_item?.id ??
+                                                                   recipeInfo.horde_crafted_item.id); //await _blizzApiService.GetItemMedia(recipeInfo.crafted_item?.id ??
+                                                                                                      // recipeInfo.horde_crafted_item.id);
                                 retryCount++;
                             } while (media == null || retryCount > 10);
                         }
@@ -243,7 +247,7 @@ namespace WoWAuctionHouse.ViewModel
                         {
                             Id = res.id,
                             Name = res.name,
-                            ItemMediaURL = inBase ? media.assets.FirstOrDefault()?.value : ""
+                            ItemMediaURL = inBase ? media : ""
                         };
                         if (RecipeCategoriesCollection[i].Recipes == null)
                             RecipeCategoriesCollection[i].Recipes = new ObservableCollection<RecipeModel>();
