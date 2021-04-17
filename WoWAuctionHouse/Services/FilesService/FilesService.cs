@@ -1,23 +1,42 @@
-﻿using Microsoft.Extensions.Logging;
-using RestSharp;
+﻿using RestSharp;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using WoWAuctionHouse.Services.BlizzApiService;
+using WoWAuctionHouse.Services.ExpansionsService;
 
 namespace WoWAuctionHouse.Services.FilesService
 {
     public class FilesService : IFilesService
     {
         private readonly IBlizzApiService _blizzApiService;
+        private readonly IExpansionsService _expansionsService;
 
         private readonly string RootPath = Directory.GetCurrentDirectory();
         private readonly string ItemFolder = "Items";
         private readonly string ProffesionFolder = "Proffesions";
+        private readonly string ExpansionFolder = "Expansions";
 
-        public FilesService(IBlizzApiService blizzApiService)
+        public FilesService(IBlizzApiService blizzApiService, IExpansionsService expansionsService)
         {
             _blizzApiService = blizzApiService;
+            _expansionsService = expansionsService;
+        }
+
+        public async Task<string> GetExpansionImage(string expansion)
+        {
+            var directoryPath = Path.Combine(RootPath, expansion);
+            if (!Directory.Exists(directoryPath))
+                Directory.CreateDirectory(directoryPath);
+            var fileName = expansion + ".png";
+            var filePath = Path.Combine(directoryPath, fileName);
+            if (File.Exists(filePath))
+                return filePath;
+            var expansionObject = _expansionsService.GetExpansionByKey(expansion);
+
+            Task.Factory.StartNew(() => SaveFile(itemMediaUrl, filePath));
+
+            return expansionObject.IconUrl;
         }
 
         public async Task<string> GetItemImage(int itemId)

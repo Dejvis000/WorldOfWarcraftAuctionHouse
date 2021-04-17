@@ -9,6 +9,7 @@ using WoWAuctionHouse.Infrastructure;
 using WoWAuctionHouse.Models;
 using WoWAuctionHouse.Services.AuctionService;
 using WoWAuctionHouse.Services.BlizzApiService;
+using WoWAuctionHouse.Services.ExpansionsService;
 
 namespace WoWAuctionHouse.ViewModel
 {
@@ -18,6 +19,7 @@ namespace WoWAuctionHouse.ViewModel
 
         private readonly IFrameNavigationService _navigationService;
         private readonly IBlizzApiService _blizzApiService;
+        private readonly IExpansionsService _expansionsService;
 
         private ObservableCollection<ProffesionTierModel> _proffesionTierCollection;
         private IEnumerable<ProffesionTierModel> SelectedProffesionTier
@@ -28,13 +30,14 @@ namespace WoWAuctionHouse.ViewModel
             }
         }
 
-
         private readonly IAuctionService _auctionService;
-        public ProffesionSkillTierViewModel(IFrameNavigationService navigationService, IBlizzApiService blizzApiService, IAuctionService auctionService)
+        public ProffesionSkillTierViewModel(IFrameNavigationService navigationService, IBlizzApiService blizzApiService, 
+            IAuctionService auctionService, IExpansionsService expansionsService)
         {
             _navigationService = navigationService;
             _blizzApiService = blizzApiService;
             _auctionService = auctionService;
+            _expansionsService = expansionsService;
             ConfigureCommands();
         }
 
@@ -96,14 +99,17 @@ namespace WoWAuctionHouse.ViewModel
             ProffesionTierCollection = new ObservableCollection<ProffesionTierModel>();
             foreach (var item in tiers.skill_tiers)
             {
+                var expansion = _expansionsService.GetExpansionByKey(item.name);
                 ProffesionTierCollection.Add(new ProffesionTierModel
                 {
                     Id = item.id,
                     Name = item.name,
-                    IsSelected = false
+                    IsSelected = false,
+                    ImageURL = expansion.IconUrl,
+                    Order = expansion.Number
                 });
             }
-            ProffesionTierCollection = new ObservableCollection<ProffesionTierModel>(ProffesionTierCollection.OrderBy(x => x.Name));
+            ProffesionTierCollection = new ObservableCollection<ProffesionTierModel>(ProffesionTierCollection.OrderBy(x => x.Order));
         }
         private void Auctions_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {

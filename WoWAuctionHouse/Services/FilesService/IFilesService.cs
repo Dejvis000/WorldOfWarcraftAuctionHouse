@@ -6,6 +6,7 @@ namespace WoWAuctionHouse.Services.FilesService
     {
         Task<string> GetProffesionImage(int proffesionId);
         Task<string> GetItemImage(int itemId);
+        Task<string> GetExpansionImage(string expansion);
 
     }
 }

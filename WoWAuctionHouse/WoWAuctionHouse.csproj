@@ -212,6 +212,7 @@
     <Compile Include="Models\BlizzApiModels\GetProffesionSkillTierModels\Root.cs" />
     <Compile Include="Models\BlizzApiModels\GetRealmIdModels\Root.cs" />
     <Compile Include="Models\BlizzApiModels\GetRecipeInformationModels\Root.cs" />
+    <Compile Include="Models\ExpansionModel.cs" />
     <Compile Include="Models\GoldModel.cs" />
     <Compile Include="Models\ProffesionModel.cs" />
     <Compile Include="Models\ProffesionRecipesModel.cs" />
@@ -226,6 +227,8 @@
     <Compile Include="Services\AuctionService\IAuctionService.cs" />
     <Compile Include="Services\BlizzApiService\BlizzApiService.cs" />
     <Compile Include="Services\BlizzApiService\IBlizzApiService.cs" />
+    <Compile Include="Services\ExpansionsService\ExpansionsService.cs" />
+    <Compile Include="Services\ExpansionsService\IExpansionsService.cs" />
     <Compile Include="Services\FilesService\FilesService.cs" />
     <Compile Include="Services\FilesService\IFilesService.cs" />
     <Compile Include="Services\SettingsService\ISettingsService.cs" />

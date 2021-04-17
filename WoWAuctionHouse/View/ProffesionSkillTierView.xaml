@@ -42,7 +42,8 @@
             </ListView.ItemsPanel>
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Orientation="Vertical" Width="100" Height="100">
+                    <StackPanel Orientation="Vertical" Width="100" >
+                        <Image Source="{Binding ImageURL}" Stretch="Fill" Width="100"/>
                         <TextBlock Text="{Binding Name}" VerticalAlignment="Center" TextWrapping="WrapWithOverflow"/>
                     </StackPanel>
                 </DataTemplate>

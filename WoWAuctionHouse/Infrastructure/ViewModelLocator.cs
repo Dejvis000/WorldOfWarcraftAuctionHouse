@@ -10,6 +10,7 @@ using WoWAuctionHouse.Mapping;
 using WoWAuctionHouse.Models.SettingsModels;
 using WoWAuctionHouse.Services.AuctionService;
 using WoWAuctionHouse.Services.BlizzApiService;
+using WoWAuctionHouse.Services.ExpansionsService;
 using WoWAuctionHouse.Services.FilesService;
 using WoWAuctionHouse.Services.SettingsService;
 using WoWAuctionHouse.Services.TokenService;
@@ -47,6 +48,7 @@ namespace WoWAuctionHouse.Infrastructure
             container.RegisterType<TokenService>().As<ITokenService>();
             container.RegisterType<BlizzApiService>().As<IBlizzApiService>();
             container.RegisterType<FilesService>().As<IFilesService>();
+            container.RegisterType<ExpansionsService>().As<IExpansionsService>();
 
             container.RegisterType<AuctionService>().As<IAuctionService>().SingleInstance();
 
