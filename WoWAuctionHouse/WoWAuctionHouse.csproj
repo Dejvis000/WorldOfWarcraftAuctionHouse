@@ -203,6 +203,7 @@
     <Compile Include="Infrastructure\FrameNavigationService.cs" />
     <Compile Include="Infrastructure\IFrameNavigationService.cs" />
     <Compile Include="Mapping\MappingProfile.cs" />
+    <Compile Include="Models\AuctionItemWithGoldModel.cs" />
     <Compile Include="Models\BlizzApiModels\GetAuctionsModels\Root.cs" />
     <Compile Include="Models\BlizzApiModels\GetItemDetailsModels\Root.cs" />
     <Compile Include="Models\BlizzApiModels\GetItemMediaModels\Root.cs" />

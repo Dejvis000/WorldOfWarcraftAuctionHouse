@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using WoWAuctionHouse.Models;
 
 namespace WoWAuctionHouse.Services.FilesService
 {
@@ -6,7 +7,7 @@ namespace WoWAuctionHouse.Services.FilesService
     {
         Task<string> GetProffesionImage(int proffesionId);
         Task<string> GetItemImage(int itemId);
-        Task<string> GetExpansionImage(string expansion);
+        Task<ExpansionModel> GetExpansionImage(string expansion);
 
     }
 }
