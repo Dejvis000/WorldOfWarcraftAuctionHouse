@@ -7,11 +7,11 @@ using System.Windows;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("MvvmLight")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Auction House")]
+[assembly: AssemblyDescription("World of Warcraft Auction House")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("MvvmLight")]
+[assembly: AssemblyCompany("Dariusz Sobolewski")]
+[assembly: AssemblyProduct("Auction House")]
 [assembly: AssemblyCopyright("Copyright ©  2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

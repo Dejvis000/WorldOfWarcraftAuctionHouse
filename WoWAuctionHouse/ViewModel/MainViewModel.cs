@@ -1,6 +1,7 @@
 using GalaSoft.MvvmLight;
-using Squirrel;
 using System.Threading.Tasks;
+using AutoUpdaterDotNET;
+
 
 namespace WoWAuctionHouse.ViewModel
 {
@@ -13,8 +14,7 @@ namespace WoWAuctionHouse.ViewModel
             string version = fvi.FileVersion;
 
             WindowTitle = $"Auction House {version}";
-
-            Task.Run(async () => await Update());
+            AutoUpdater.Start("http://rbsoft.org/updates/AutoUpdaterTest.xml");
         }
 
         private string _windowTitle;
@@ -25,14 +25,6 @@ namespace WoWAuctionHouse.ViewModel
             set
             {
                 Set(() => WindowTitle, ref _windowTitle, value);
-            }
-        }
-
-        public async Task Update()
-        {
-            using (var mgr = UpdateManager.GitHubUpdateManager("https://github.com/Dejvis000/WorldOfWarcraftAuctionHouse", prerelease:true))
-            {
-                await mgr.Result.UpdateApp();
             }
         }
 
