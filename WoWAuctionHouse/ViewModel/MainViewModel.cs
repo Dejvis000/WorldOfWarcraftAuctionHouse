@@ -14,7 +14,7 @@ namespace WoWAuctionHouse.ViewModel
             string version = fvi.FileVersion;
 
             WindowTitle = $"Auction House {version}";
-            AutoUpdater.Start("http://rbsoft.org/updates/AutoUpdaterTest.xml");
+            AutoUpdater.Start("https://github.com/Dejvis000/WorldOfWarcraftAuctionHouse/releases/download/1.0.0.0/info.xml");
         }
 
         private string _windowTitle;
