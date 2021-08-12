@@ -1,7 +1,9 @@
 using GalaSoft.MvvmLight;
 using System.Threading.Tasks;
 using AutoUpdaterDotNET;
-
+using Octokit;
+using System.Collections.Generic;
+using System;
 
 namespace WoWAuctionHouse.ViewModel
 {
@@ -14,7 +16,12 @@ namespace WoWAuctionHouse.ViewModel
             string version = fvi.FileVersion;
 
             WindowTitle = $"Auction House {version}";
-            AutoUpdater.Start("https://github.com/Dejvis000/WorldOfWarcraftAuctionHouse/releases/download/1.0.0.0/info.xml");
+            IReadOnlyList<Release> releases;
+
+            var client = new GitHubClient(new ProductHeaderValue("WorldOfWarcraftAuctionHouse"));
+            releases = client.Repository.Release.GetAll("Dejvis000", "WorldOfWarcraftAuctionHouse").Result;
+
+            AutoUpdater.Start($"https://github.com/Dejvis000/WorldOfWarcraftAuctionHouse/releases/download/{releases[0].TagName}/info.xml");
         }
 
         private string _windowTitle;
