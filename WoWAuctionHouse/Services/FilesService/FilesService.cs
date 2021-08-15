@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using WoWAuctionHouse.Models;
 using WoWAuctionHouse.Services.BlizzApiService;
 using WoWAuctionHouse.Services.ExpansionsService;
 
@@ -23,20 +24,25 @@ namespace WoWAuctionHouse.Services.FilesService
             _expansionsService = expansionsService;
         }
 
-        public async Task<string> GetExpansionImage(string expansion)
+        public async Task<ExpansionModel> GetExpansionImage(string expansion)
         {
-            var directoryPath = Path.Combine(RootPath, expansion);
+            expansion = expansion.Split('/')[0];
+            var expansionObject = _expansionsService.GetExpansionByKey(expansion);
+            var directoryPath = Path.Combine(RootPath, ExpansionFolder);
             if (!Directory.Exists(directoryPath))
                 Directory.CreateDirectory(directoryPath);
-            var fileName = expansion + ".png";
+            var fileName = expansionObject.Name + ".png";
             var filePath = Path.Combine(directoryPath, fileName);
+            
             if (File.Exists(filePath))
-                return filePath;
-            var expansionObject = _expansionsService.GetExpansionByKey(expansion);
+            {
+                expansionObject.IconUrl = filePath;
+                return expansionObject;
+            }
 
-            Task.Factory.StartNew(() => SaveFile(itemMediaUrl, filePath));
+            Task.Factory.StartNew(() => SaveFile(expansionObject.IconUrl, filePath));
 
-            return expansionObject.IconUrl;
+            return expansionObject;
         }
 
         public async Task<string> GetItemImage(int itemId)
@@ -49,9 +55,12 @@ namespace WoWAuctionHouse.Services.FilesService
             if (File.Exists(filePath))
                 return filePath;
             var itemMedia = await _blizzApiService.GetItemMedia(itemId);
-            var itemMediaUrl = itemMedia.assets.First().value;
-
-            Task.Factory.StartNew(() => SaveFile(itemMediaUrl, filePath));
+            string itemMediaUrl = "";
+            if (itemMedia != null)
+            {
+                itemMediaUrl = itemMedia.assets.First().value;
+                Task.Factory.StartNew(() => SaveFile(itemMediaUrl, filePath));
+            }
 
             return itemMediaUrl;
 

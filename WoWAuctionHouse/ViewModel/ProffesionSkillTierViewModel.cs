@@ -10,6 +10,7 @@ using WoWAuctionHouse.Models;
 using WoWAuctionHouse.Services.AuctionService;
 using WoWAuctionHouse.Services.BlizzApiService;
 using WoWAuctionHouse.Services.ExpansionsService;
+using WoWAuctionHouse.Services.FilesService;
 
 namespace WoWAuctionHouse.ViewModel
 {
@@ -20,6 +21,7 @@ namespace WoWAuctionHouse.ViewModel
         private readonly IFrameNavigationService _navigationService;
         private readonly IBlizzApiService _blizzApiService;
         private readonly IExpansionsService _expansionsService;
+        private readonly IFilesService _filesService;
 
         private ObservableCollection<ProffesionTierModel> _proffesionTierCollection;
         private IEnumerable<ProffesionTierModel> SelectedProffesionTier
@@ -32,12 +34,13 @@ namespace WoWAuctionHouse.ViewModel
 
         private readonly IAuctionService _auctionService;
         public ProffesionSkillTierViewModel(IFrameNavigationService navigationService, IBlizzApiService blizzApiService, 
-            IAuctionService auctionService, IExpansionsService expansionsService)
+            IAuctionService auctionService, IExpansionsService expansionsService, IFilesService filesService)
         {
             _navigationService = navigationService;
             _blizzApiService = blizzApiService;
             _auctionService = auctionService;
             _expansionsService = expansionsService;
+            _filesService = filesService;
             ConfigureCommands();
         }
 
@@ -99,7 +102,7 @@ namespace WoWAuctionHouse.ViewModel
             ProffesionTierCollection = new ObservableCollection<ProffesionTierModel>();
             foreach (var item in tiers.skill_tiers)
             {
-                var expansion = _expansionsService.GetExpansionByKey(item.name);
+                var expansion = await _filesService.GetExpansionImage(item.name);
                 ProffesionTierCollection.Add(new ProffesionTierModel
                 {
                     Id = item.id,

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:WoWAuctionHouse"
         DataContext="{Binding MainViewModel , Source={StaticResource Locator}}"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="{Binding WindowTitle}" Height="450" Width="800">
     <Frame 
         Grid.Row="1"
         x:Name="MainFrame"

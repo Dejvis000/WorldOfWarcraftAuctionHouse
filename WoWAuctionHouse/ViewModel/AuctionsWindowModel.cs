@@ -1,12 +1,7 @@
 ﻿using AutoMapper;
 using GalaSoft.MvvmLight;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WoWAuctionHouse.Extensions;
 using WoWAuctionHouse.Models;
 using WoWAuctionHouse.Services.AuctionService;
 using WoWAuctionHouse.View;
@@ -50,33 +45,5 @@ namespace WoWAuctionHouse.ViewModel
                     Auctions = new ObservableCollection<AuctionItemWithGoldModel>(_mapper.Map<List<AuctionItemWithGoldModel>>(_auctionService.GetAuctionsByItemId(Item.Id)));
             }
         }
-    }
-
-    public class AuctionItemWithGoldModel
-    {
-        private long unitPrice;
-        private long? buyOutPrice;
-        public long? BuyOutPrice
-        {
-            get => buyOutPrice;
-            set
-            {
-                buyOutPrice = value;
-                BuyOutPriceGold = buyOutPrice.ToGold();
-            }
-        }
-        public long UnitPrice
-        {
-            get => unitPrice;
-            set
-            {
-                unitPrice = value;
-                UnitPriceGold = unitPrice.ToGold();
-            }
-        }
-        public int Quantity { get; set; }
-        public int ItemId { get; set; }
-        public GoldModel BuyOutPriceGold { get; set; }
-        public GoldModel UnitPriceGold { get; set; }
     }
 }
